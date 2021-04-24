@@ -41,45 +41,30 @@ with mp_pose.Pose(min_detection_confidence=0.5,
     status = True  # state of move
     while cap.isOpened():
         ret, frame = cap.read()
+        # result_screen = np.zeros((250, 400, 3), np.uint8)
+
         frame = cv2.resize(frame, (800, 480), interpolation=cv2.INTER_AREA)
-        ## recolor image to RGB
-        image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        image.flags.writeable = False
+        ## recolor frame to RGB
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        frame.flags.writeable = False
         ## make detection
-        results = pose.process(image)
+        results = pose.process(frame)
         ## recolor back to BGR
-        image.flags.writeable = True
-        image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+        frame.flags.writeable = True
+        frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
 
         try:
             landmarks = results.pose_landmarks.landmark
-            if args["exercise_type"] == "push-up":
-                counter, status = TypeOfExercise(landmarks).push_up(
-                    counter, status)
-            elif args["exercise_type"] == "pull-up":
-                counter, status = TypeOfExercise(landmarks).pull_up(
-                    counter, status)
-            elif args["exercise_type"] == "squat":
-                counter, status = TypeOfExercise(landmarks).squat(
-                    counter, status)
-            elif args["exercise_type"] == "walk":
-                counter, status = TypeOfExercise(landmarks).walk(
-                    counter, status)
-            elif args["exercise_type"] == "sit-up":
-                counter, status = TypeOfExercise(landmarks).sit_up(
-                    counter, status)
-
+            counter, status = TypeOfExercise(landmarks).calculate_exercise(
+                args["exercise_type"], counter, status)
         except:
             pass
 
-        cv2.putText(image,
-                    "Status: " + str(status) + " / Counter: " + str(counter),
-                    (20, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (174, 139, 45),
-                    2, cv2.LINE_AA)
+        score_table(counter, status)
 
         ## render detections (for landmarks)
         mp_drawing.draw_landmarks(
-            image,
+            frame,
             results.pose_landmarks,
             mp_pose.POSE_CONNECTIONS,
             mp_drawing.DrawingSpec(color=(255, 255, 255),
@@ -90,7 +75,7 @@ with mp_pose.Pose(min_detection_confidence=0.5,
                                    circle_radius=2),
         )
 
-        cv2.imshow('Mediapipe Feed', image)
+        cv2.imshow('Video', frame)
         if cv2.waitKey(10) & 0xFF == ord('q'):
             break
 

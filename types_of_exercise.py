@@ -83,3 +83,22 @@ class TypeOfExercise(BodyPartAngle):
                 status = True
 
         return [counter, status]
+
+    def calculate_exercise(self, exercise_type, counter, status):
+        if exercise_type == "push-up":
+            counter, status = TypeOfExercise(self.landmarks).push_up(
+                counter, status)
+        elif exercise_type == "pull-up":
+            counter, status = TypeOfExercise(self.landmarks).pull_up(
+                counter, status)
+        elif exercise_type == "squat":
+            counter, status = TypeOfExercise(self.landmarks).squat(
+                counter, status)
+        elif exercise_type == "walk":
+            counter, status = TypeOfExercise(self.landmarks).walk(
+                counter, status)
+        elif args["exercise_type"] == "sit-up":
+            counter, status = TypeOfExercise(self.landmarks).sit_up(
+                counter, status)
+
+        return [counter, status]

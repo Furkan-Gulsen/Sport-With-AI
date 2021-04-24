@@ -42,3 +42,12 @@ def detection_body_parts(landmarks):
         body_parts.loc[i] = lndmrk, cord[0], cord[1]
 
     return body_parts
+
+
+def score_table(counter, status):
+    score_table = cv2.imread("score_table.png")
+    cv2.putText(score_table,
+                "Status: " + str(status) + " / Counter: " + str(counter),
+                (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (182, 158, 128), 2,
+                cv2.LINE_AA)
+    cv2.imshow("Score Table", score_table)
