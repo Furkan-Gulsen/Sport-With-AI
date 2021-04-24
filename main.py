@@ -4,15 +4,19 @@ import numpy as np
 import pandas as pd
 from utils import *
 from body_part_angle import BodyPartAngle
+from types_of_exercise import TypeOfExercise
 
 # drawing your body
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture("push-up.mp4")
 ## Setup mediapipe instance
 with mp_pose.Pose(min_detection_confidence=0.5,
                   min_tracking_confidence=0.5) as pose:
+
+    counter = 0
+    status = True
     while cap.isOpened():
         ret, frame = cap.read()
 
@@ -27,21 +31,18 @@ with mp_pose.Pose(min_detection_confidence=0.5,
         image.flags.writeable = True
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-        landmarks = results.pose_landmarks.landmark
+        try:
+            landmarks = results.pose_landmarks.landmark
+            # push up
+            counter, status = TypeOfExercise(landmarks).push_up(
+                counter, status)
 
-        # Get coordinates
-        shoulder = detection_body_part(landmarks, "LEFT_SHOULDER")
-        elbow = detection_body_part(landmarks, "LEFT_ELBOW")
-        wrist = detection_body_part(landmarks, "LEFT_WRIST")
-
-        # Calculate angle
-        angle = calculate_angle(shoulder, elbow, wrist)
-        # left_arm = BodyPartAngle(landmarks).angle_of_the_left_arm()
-
-        cv2.putText(image, str(left_arm),
-                    tuple(np.multiply(elbow, [640, 480]).astype(int)),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2,
-                    cv2.LINE_AA)
+            cv2.putText(
+                image, "Status: " + str(status) + "/ counter: " + str(counter),
+                (20, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2,
+                cv2.LINE_AA)
+        except:
+            pass
 
         # Render detections
         mp_drawing.draw_landmarks(

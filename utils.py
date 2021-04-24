@@ -31,6 +31,11 @@ def detection_body_part(landmarks, body_part_name):
     ]
 
 
+# return body part visibility
+def get_visibility(landmarks, body_part_name):
+    return landmarks[mp_pose.PoseLandmark[body_part_name].visibility]
+
+
 # return body_part, x, y as dataframe
 def detection_body_parts(landmarks):
     body_parts = pd.DataFrame(columns=["body_part", "x", "y"])
