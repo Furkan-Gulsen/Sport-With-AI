@@ -1,20 +1,39 @@
 ## import packages
 import cv2
+import argparse
 from utils import *
 import mediapipe as mp
 from body_part_angle import BodyPartAngle
 from types_of_exercise import TypeOfExercise
+
+## setup agrparse
+ap = argparse.ArgumentParser()
+ap.add_argument("-t",
+                "--exercise_type",
+                type=str,
+                help='Type of activity to do',
+                required=True)
+ap.add_argument("-vs",
+                "--video_source",
+                type=str,
+                help='Type of activity to do',
+                required=False)
+args = vars(ap.parse_args())
 
 ## drawing body
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 
 ## setting the video source
-cap = cv2.VideoCapture("sit-up.mp4")
+if args["video_source"] is not None:
+    cap = cv2.VideoCapture(args["video_source"])
+else:
+    cap = cv2.VideoCapture(0)  # webcam
+
 cap.set(3, 800)  # width
 cap.set(4, 480)  # height
 
-## setup mediapipe instance
+## setup mediapipe
 with mp_pose.Pose(min_detection_confidence=0.5,
                   min_tracking_confidence=0.5) as pose:
 
@@ -23,33 +42,32 @@ with mp_pose.Pose(min_detection_confidence=0.5,
     while cap.isOpened():
         ret, frame = cap.read()
         frame = cv2.resize(frame, (800, 480), interpolation=cv2.INTER_AREA)
-        # Recolor image to RGB
+        ## recolor image to RGB
         image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         image.flags.writeable = False
-        # Make detection
+        ## make detection
         results = pose.process(image)
-        # Recolor back to BGR
+        ## recolor back to BGR
         image.flags.writeable = True
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
         try:
             landmarks = results.pose_landmarks.landmark
-            # push up
-            # counter, status = TypeOfExercise(landmarks).push_up(
-            #     counter, status)
-
-            # pull up
-            # counter, status = TypeOfExercise(landmarks).pull_up(
-            #     counter, status)
-
-            # squat
-            # counter, status = TypeOfExercise(landmarks).squat(counter, status)
-
-            # step counter
-            # counter, status = TypeOfExercise(landmarks).walk(counter, status)
-
-            # sit up
-            counter, status = TypeOfExercise(landmarks).sit_up(counter, status)
+            if args["exercise_type"] == "push-up":
+                counter, status = TypeOfExercise(landmarks).push_up(
+                    counter, status)
+            elif args["exercise_type"] == "pull-up":
+                counter, status = TypeOfExercise(landmarks).pull_up(
+                    counter, status)
+            elif args["exercise_type"] == "squat":
+                counter, status = TypeOfExercise(landmarks).squat(
+                    counter, status)
+            elif args["exercise_type"] == "walk":
+                counter, status = TypeOfExercise(landmarks).walk(
+                    counter, status)
+            elif args["exercise_type"] == "sit-up":
+                counter, status = TypeOfExercise(landmarks).sit_up(
+                    counter, status)
 
         except:
             pass
@@ -59,7 +77,7 @@ with mp_pose.Pose(min_detection_confidence=0.5,
                     (20, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (174, 139, 45),
                     2, cv2.LINE_AA)
 
-        # Render detections
+        ## render detections (for landmarks)
         mp_drawing.draw_landmarks(
             image,
             results.pose_landmarks,
@@ -73,7 +91,6 @@ with mp_pose.Pose(min_detection_confidence=0.5,
         )
 
         cv2.imshow('Mediapipe Feed', image)
-
         if cv2.waitKey(10) & 0xFF == ord('q'):
             break
 
