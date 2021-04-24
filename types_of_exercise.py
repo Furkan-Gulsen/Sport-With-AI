@@ -55,3 +55,19 @@ class TypeOfExercise(BodyPartAngle):
                 status = True
 
         return [counter, status]
+
+    def walk(self, counter, status):
+        right_knee = detection_body_part(self.landmarks, "RIGHT_KNEE")
+        left_knee = detection_body_part(self.landmarks, "LEFT_KNEE")
+
+        if status:
+            if left_knee[0] > right_knee[0]:
+                counter += 1
+                status = False
+
+        else:
+            if left_knee[0] < right_knee[0]:
+                counter += 1
+                status = True
+
+        return [counter, status]

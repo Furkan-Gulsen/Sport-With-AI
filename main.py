@@ -10,7 +10,7 @@ from types_of_exercise import TypeOfExercise
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 
-cap = cv2.VideoCapture("squat.mp4")
+cap = cv2.VideoCapture("walk.mp4")
 cap.set(3, 800)
 cap.set(4, 480)
 
@@ -43,15 +43,18 @@ with mp_pose.Pose(min_detection_confidence=0.5,
             #     counter, status)
 
             # squat
-            counter, status = TypeOfExercise(landmarks).squat(counter, status)
+            # counter, status = TypeOfExercise(landmarks).squat(counter, status)
 
-            cv2.putText(
-                image, "Status: " + str(status) + "/ Counter: " + str(counter),
-                (20, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2,
-                cv2.LINE_AA)
+            # step counter
+            counter, status = TypeOfExercise(landmarks).walk(counter, status)
 
         except:
             pass
+
+        cv2.putText(image,
+                    "Status: " + str(status) + "/ Counter: " + str(counter),
+                    (20, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (245, 66, 230), 2,
+                    cv2.LINE_AA)
 
         # Render detections
         mp_drawing.draw_landmarks(
