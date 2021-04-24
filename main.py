@@ -10,7 +10,7 @@ from types_of_exercise import TypeOfExercise
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 
-cap = cv2.VideoCapture("pull-up.mp4")
+cap = cv2.VideoCapture("squat.mp4")
 cap.set(3, 800)
 cap.set(4, 480)
 
@@ -39,8 +39,11 @@ with mp_pose.Pose(min_detection_confidence=0.5,
             #     counter, status)
 
             # pull up
-            counter, status = TypeOfExercise(landmarks).pull_up(
-                counter, status)
+            # counter, status = TypeOfExercise(landmarks).pull_up(
+            #     counter, status)
+
+            # squat
+            counter, status = TypeOfExercise(landmarks).squat(counter, status)
 
             cv2.putText(
                 image, "Status: " + str(status) + "/ Counter: " + str(counter),

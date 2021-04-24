@@ -41,4 +41,17 @@ class TypeOfExercise(BodyPartAngle):
 
         return [counter, status]
 
-    # def squat(self, counter, status):
+    def squat(self, counter, status):
+        left_leg_angle = self.angle_of_the_right_leg()
+        right_leg_angle = self.angle_of_the_left_leg()
+        avg_leg_angle = (left_leg_angle + right_leg_angle) // 2
+
+        if status:
+            if avg_leg_angle < 70:
+                counter += 1
+                status = False
+        else:
+            if avg_leg_angle > 160:
+                status = True
+
+        return [counter, status]
