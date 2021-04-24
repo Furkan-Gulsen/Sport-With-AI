@@ -2,6 +2,8 @@ import cv2
 import mediapipe as mp
 import numpy as np
 import pandas as pd
+from utils import *
+from body_part_angle import BodyPartAngle
 
 # drawing your body
 mp_drawing = mp.solutions.drawing_utils
@@ -25,27 +27,21 @@ with mp_pose.Pose(min_detection_confidence=0.5,
         image.flags.writeable = True
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-        # Extract landmarks
-        try:
-            landmarks = results.pose_landmarks.landmark
+        landmarks = results.pose_landmarks.landmark
 
-            # Get coordinates
-            shoulder = detection_body_part(landmarks, "LEFT_SHOULDER")
-            elbow = detection_body_part(landmarks, "LEFT_ELBOW")
-            wrist = detection_body_part(landmarks, "LEFT_WRIST")
-            print(calculate_body_part_angle(landmarks, "LEFT_LEG"))
+        # Get coordinates
+        shoulder = detection_body_part(landmarks, "LEFT_SHOULDER")
+        elbow = detection_body_part(landmarks, "LEFT_ELBOW")
+        wrist = detection_body_part(landmarks, "LEFT_WRIST")
 
-            # Calculate angle
-            angle = calculate_angle(shoulder, elbow, wrist)
+        # Calculate angle
+        angle = calculate_angle(shoulder, elbow, wrist)
+        # left_arm = BodyPartAngle(landmarks).angle_of_the_left_arm()
 
-            # Visualize angle
-            cv2.putText(image, str(angle),
-                        tuple(np.multiply(elbow, [640, 480]).astype(int)),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2,
-                        cv2.LINE_AA)
-
-        except:
-            pass
+        cv2.putText(image, str(left_arm),
+                    tuple(np.multiply(elbow, [640, 480]).astype(int)),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2,
+                    cv2.LINE_AA)
 
         # Render detections
         mp_drawing.draw_landmarks(

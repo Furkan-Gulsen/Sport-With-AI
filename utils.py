@@ -3,6 +3,8 @@ import pandas as pd
 import numpy as np
 import cv2
 
+mp_pose = mp.solutions.pose
+
 
 # returns an angle value as a result of the given points
 def calculate_angle(a, b, c):
