@@ -10,7 +10,10 @@ from types_of_exercise import TypeOfExercise
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 
-cap = cv2.VideoCapture("push-up.mp4")
+cap = cv2.VideoCapture("pull-up.mp4")
+cap.set(3, 800)
+cap.set(4, 480)
+
 ## Setup mediapipe instance
 with mp_pose.Pose(min_detection_confidence=0.5,
                   min_tracking_confidence=0.5) as pose:
@@ -19,14 +22,12 @@ with mp_pose.Pose(min_detection_confidence=0.5,
     status = True
     while cap.isOpened():
         ret, frame = cap.read()
-
+        frame = cv2.resize(frame, (800, 480), interpolation=cv2.INTER_AREA)
         # Recolor image to RGB
         image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         image.flags.writeable = False
-
         # Make detection
         results = pose.process(image)
-
         # Recolor back to BGR
         image.flags.writeable = True
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
@@ -34,13 +35,18 @@ with mp_pose.Pose(min_detection_confidence=0.5,
         try:
             landmarks = results.pose_landmarks.landmark
             # push up
-            counter, status = TypeOfExercise(landmarks).push_up(
+            # counter, status = TypeOfExercise(landmarks).push_up(
+            #     counter, status)
+
+            # pull up
+            counter, status = TypeOfExercise(landmarks).pull_up(
                 counter, status)
 
             cv2.putText(
-                image, "Status: " + str(status) + "/ counter: " + str(counter),
+                image, "Status: " + str(status) + "/ Counter: " + str(counter),
                 (20, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2,
                 cv2.LINE_AA)
+
         except:
             pass
 

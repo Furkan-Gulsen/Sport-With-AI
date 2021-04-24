@@ -27,13 +27,9 @@ def calculate_angle(a, b, c):
 def detection_body_part(landmarks, body_part_name):
     return [
         landmarks[mp_pose.PoseLandmark[body_part_name].value].x,
-        landmarks[mp_pose.PoseLandmark[body_part_name].value].y
+        landmarks[mp_pose.PoseLandmark[body_part_name].value].y,
+        landmarks[mp_pose.PoseLandmark[body_part_name].value].visibility
     ]
-
-
-# return body part visibility
-def get_visibility(landmarks, body_part_name):
-    return landmarks[mp_pose.PoseLandmark[body_part_name].visibility]
 
 
 # return body_part, x, y as dataframe

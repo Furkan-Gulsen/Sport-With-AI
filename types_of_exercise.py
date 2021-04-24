@@ -21,3 +21,24 @@ class TypeOfExercise(BodyPartAngle):
                 status = True
 
         return [counter, status]
+
+    # def push_up_method_2():
+
+    def pull_up(self, counter, status):
+        nose = detection_body_part(self.landmarks, "NOSE")
+        left_elbow = detection_body_part(self.landmarks, "LEFT_ELBOW")
+        right_elbow = detection_body_part(self.landmarks, "RIGHT_ELBOW")
+        avg_shoulder_y = (left_elbow[1] + right_elbow[1]) / 2
+
+        if status:
+            if nose[1] > avg_shoulder_y:
+                counter += 1
+                status = False
+
+        else:
+            if nose[1] < avg_shoulder_y:
+                status = True
+
+        return [counter, status]
+
+    # def squat(self, counter, status):
