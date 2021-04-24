@@ -1,25 +1,25 @@
+## import packages
 import cv2
-import mediapipe as mp
-import numpy as np
-import pandas as pd
 from utils import *
+import mediapipe as mp
 from body_part_angle import BodyPartAngle
 from types_of_exercise import TypeOfExercise
 
-# drawing your body
+## drawing body
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 
-cap = cv2.VideoCapture("walk.mp4")
-cap.set(3, 800)
-cap.set(4, 480)
+## setting the video source
+cap = cv2.VideoCapture("sit-up.mp4")
+cap.set(3, 800)  # width
+cap.set(4, 480)  # height
 
-## Setup mediapipe instance
+## setup mediapipe instance
 with mp_pose.Pose(min_detection_confidence=0.5,
                   min_tracking_confidence=0.5) as pose:
 
-    counter = 0
-    status = True
+    counter = 0  # movement of exercise
+    status = True  # state of move
     while cap.isOpened():
         ret, frame = cap.read()
         frame = cv2.resize(frame, (800, 480), interpolation=cv2.INTER_AREA)
@@ -46,25 +46,31 @@ with mp_pose.Pose(min_detection_confidence=0.5,
             # counter, status = TypeOfExercise(landmarks).squat(counter, status)
 
             # step counter
-            counter, status = TypeOfExercise(landmarks).walk(counter, status)
+            # counter, status = TypeOfExercise(landmarks).walk(counter, status)
+
+            # sit up
+            counter, status = TypeOfExercise(landmarks).sit_up(counter, status)
 
         except:
             pass
 
         cv2.putText(image,
-                    "Status: " + str(status) + "/ Counter: " + str(counter),
-                    (20, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (245, 66, 230), 2,
-                    cv2.LINE_AA)
+                    "Status: " + str(status) + " / Counter: " + str(counter),
+                    (20, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (174, 139, 45),
+                    2, cv2.LINE_AA)
 
         # Render detections
         mp_drawing.draw_landmarks(
-            image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS,
-            mp_drawing.DrawingSpec(color=(245, 117, 66),
+            image,
+            results.pose_landmarks,
+            mp_pose.POSE_CONNECTIONS,
+            mp_drawing.DrawingSpec(color=(255, 255, 255),
                                    thickness=2,
                                    circle_radius=2),
-            mp_drawing.DrawingSpec(color=(245, 66, 230),
+            mp_drawing.DrawingSpec(color=(174, 139, 45),
                                    thickness=2,
-                                   circle_radius=2))
+                                   circle_radius=2),
+        )
 
         cv2.imshow('Mediapipe Feed', image)
 

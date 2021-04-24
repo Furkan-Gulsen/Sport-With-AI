@@ -71,3 +71,15 @@ class TypeOfExercise(BodyPartAngle):
                 status = True
 
         return [counter, status]
+
+    def sit_up(self, counter, status):
+        angle = self.angle_of_the_abdomen()
+        if status:
+            if angle < 55:
+                counter += 1
+                status = False
+        else:
+            if angle > 105:
+                status = True
+
+        return [counter, status]
