@@ -60,7 +60,7 @@ with mp_pose.Pose(min_detection_confidence=0.5,
         except:
             pass
 
-        score_table(counter, status)
+        score_table(args["exercise_type"], counter, status)
 
         ## render detections (for landmarks)
         mp_drawing.draw_landmarks(

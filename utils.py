@@ -44,10 +44,13 @@ def detection_body_parts(landmarks):
     return body_parts
 
 
-def score_table(counter, status):
+def score_table(exercise, counter, status):
     score_table = cv2.imread("score_table.png")
-    cv2.putText(score_table,
-                "Status: " + str(status) + " / Counter: " + str(counter),
-                (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (182, 158, 128), 2,
+    cv2.putText(score_table, "Activity : " + exercise.replace("-", " "),
+                (10, 65), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (182, 158, 128), 2,
                 cv2.LINE_AA)
+    cv2.putText(score_table, "Counter : " + str(counter), (10, 100),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.7, (182, 158, 128), 2, cv2.LINE_AA)
+    cv2.putText(score_table, "Status : " + str(status), (10, 135),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.7, (182, 158, 128), 2, cv2.LINE_AA)
     cv2.imshow("Score Table", score_table)
