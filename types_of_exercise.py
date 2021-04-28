@@ -97,7 +97,7 @@ class TypeOfExercise(BodyPartAngle):
         elif exercise_type == "walk":
             counter, status = TypeOfExercise(self.landmarks).walk(
                 counter, status)
-        elif args["exercise_type"] == "sit-up":
+        elif exercise_type == "sit-up":
             counter, status = TypeOfExercise(self.landmarks).sit_up(
                 counter, status)
 

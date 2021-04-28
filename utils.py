@@ -45,7 +45,7 @@ def detection_body_parts(landmarks):
 
 
 def score_table(exercise, counter, status):
-    score_table = cv2.imread("score_table.png")
+    score_table = cv2.imread("./images/score_table.png")
     cv2.putText(score_table, "Activity : " + exercise.replace("-", " "),
                 (10, 65), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (182, 158, 128), 2,
                 cv2.LINE_AA)
