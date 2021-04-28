@@ -1,6 +1,6 @@
 # Sport With AI
 
-> The human body is detected with the help of the [Pose Estimation](https://github.com/google/mediapipe) library. Then, using the mathematical methods applied, it is determined how much the exercise movement is done.
+> The human body is detected with the help of the [Pose Estimation](https://github.com/google/mediapipe) library. Then, using the mathematical methods applied, it is determined how much the exercise count is done.
 
 ## Sit-Up Exercise
 ![Sit-Up](https://github.com/Furkan-Gulsen/Sport-With-AI/blob/main/output/output%20sit-up.gif)
