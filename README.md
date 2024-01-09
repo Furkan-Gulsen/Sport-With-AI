@@ -1,5 +1,7 @@
 # Sport With AI
 
+- Monorepo: https://github.com/Furkan-Gulsen/sport-with-ai-monorepo
+
 > The human body is detected with the help of the [Mediapipe](https://github.com/google/mediapipe) library. Then, using the mathematical methods applied, it is determined how much the exercise count is done.
 
 ## Sit-Up Exercise
